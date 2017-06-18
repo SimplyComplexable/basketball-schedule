@@ -22,7 +22,10 @@ export class MyTeamsPage {
     private userSettingsService: UserSettingsService) {}
 
   ionViewDidEnter() {
-    this.favorites = this.userSettingsService.getAllFavorites();
+    this.userSettingsService.getAllFavorites()
+      .then(() => {
+        this.favorites = this.userSettingsService.items;
+      });
   }
 
   navigateToTournaments() {
@@ -37,7 +40,7 @@ export class MyTeamsPage {
     loader.present();
     this.httpService.getTournamentData(favorite.tournamentId)
       .subscribe(
-        t => this.navCtrl.push(TeamHomePage, favorite.team)
+        () => this.navCtrl.push(TeamHomePage, favorite.team)
       );
   }
 

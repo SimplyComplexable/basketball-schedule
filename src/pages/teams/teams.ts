@@ -48,4 +48,40 @@ export class TeamsPage {
     this.navCtrl.push(TeamHomePage, team);
   }
 
+  onSearch(event) {
+    let searchVal = event.target.value.toLowerCase();
+    this.teams = this.allTeams
+      .reduce((carry,team) => {
+        let newValue: boolean = true;
+        for (let i in carry) {
+          if (carry[i].divisionName !== team.division) {
+            continue;
+          }
+          if (!carry[i].divisionTeams) {
+            carry[i].divisionTeams = [];
+          }
+          carry[i].divisionTeams.push(team);
+          newValue = false;
+        }
+        if (newValue) {
+          carry.push({
+            divisionName: team.division,
+            divisionTeams: [team]
+          });
+        }
+        return carry;
+      }, [])
+      .map(division => {
+          return {
+            divisionName: division.divisionName,
+            divisionTeams: division.divisionTeams.filter(
+              team => team.name.toLowerCase().includes(searchVal)
+            )
+          };
+        })
+      .filter(
+        division => division.divisionTeams.length
+      );
+  }
+
 }

@@ -1,82 +1,38 @@
 import {Injectable} from "@angular/core";
 import {Storage} from "@ionic/storage";
-import {Events} from 'ionic-angular';
-import { SqlStorage } from './sql-storage.service';
-
-const win: any = window;
+import {Events} from "ionic-angular";
 
 @Injectable()
 export class UserSettingsService {
-  private sqlMode = false;
-
-  constructor(public events: Events, public storage: Storage, private sql: SqlStorage) {
-    if (win.sqlitePlugin) {
-      this.sqlMode = true;
-    } else {
-      console.warn('SQLite plugin not installed. Falling back to regular Ionic Storage.');
-    }
-  }
+  items = [];
+  constructor(private storage: Storage, public events: Events) {}
 
   favoriteTeam(team, tournamentId, tournamentName) {
-    let item = {team: team, tournamentId: tournamentId, tournamentName: tournamentName};
-
-    if (this.sqlMode) {
-      this.sql.set(team.id.toString(), JSON.stringify(item)).then(data => {
-        this.events.publish('favorites:changed');
-      });
-    } else {
-      return new Promise(resolve => {
-        this.storage.set(team.id.toString(), JSON.stringify(item)).then(() => {
-          this.events.publish('favorites:changed');
-          resolve();
-        });
-      });
-    }
+    let item = { team: team, tournamentId: tournamentId, tournamentName: tournamentName };
+    this.storage.set(team.id, JSON.stringify(item))
+      .then(() => this.events.publish('favorites:changed'));
   }
 
   unfavoriteTeam(team) {
-    if (this.sqlMode) {
-      this.sql.remove(team.id.toString()).then(data => {
-        this.events.publish('favorites:changed');
-      });
-    } else {
-      return new Promise(resolve => {
-        this.storage.remove(team.id.toString()).then(() => {
-          this.events.publish('favorites:changed');
-          resolve();
-        });
-      });
-    }
+    this.storage.remove(team.id)
+      .then(() => this.events.publish('favorites:changed'));
   }
 
-  isFavoriteTeam(teamId): Promise<boolean> {
-    if (this.sqlMode) {
-      return this.sql.get(teamId.toString()).then(value => value ? true : false);
-    } else {
-      return new Promise(resolve => resolve(this.storage.get(teamId.toString()).then(value => value ? true : false)));
-    }
+  isFavoriteTeam(teamId) {
+    return this.storage.get(teamId).then(
+      value => !!value
+    )
   }
 
-  getAllFavorites(): Promise<any[]> {
-    if (this.sqlMode) {
-      return this.sql.getAll();
-    } else {
-      return new Promise(resolve => {
-        let results = [];
-        this.storage.forEach(data => {
-          console.log('***inside foreach', data);
-          results.push(JSON.parse(data));
-        });
-        return resolve(results);
+  getAllFavorites() {
+    let items = [];
+    console.log('goodbye');
+    return this.storage.forEach(val => {
+      console.log('hello');
+      items.push(JSON.parse(val));
+    })
+      .then(() => {
+        this.items = items;
       });
-    }
-  }
-
-  initStorage(): Promise<any> {
-    if (this.sqlMode) {
-      return this.sql.initializeDatabase();
-    } else {
-      return new Promise(resolve => resolve());
-    }
   }
 }

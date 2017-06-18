@@ -16,6 +16,7 @@ import {TeamHomePage} from "../pages/team-home/team-home";
 import {StandingsPage} from "../pages/standings/standings";
 import {HttpModule} from "@angular/http";
 import {UserSettingsService} from "./services/user-settings.service";
+import {IonicStorageModule} from "@ionic/storage";
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import {UserSettingsService} from "./services/user-settings.service";
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    HttpModule
+    HttpModule,
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -1,11 +1,13 @@
 import {Injectable} from "@angular/core";
 import {Http, Response} from "@angular/http";
 import "rxjs";
+import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class HttpService {
   private url: string = 'https://elite-schedule-app-i2-9cde1.firebaseio.com';
   currentTournament: any = {};
+  tournamentData: any = {};
 
   constructor(private http: Http) {}
 
@@ -19,15 +21,24 @@ export class HttpService {
     });
   }
 
-  getTournamentData(tournamentId) {
+  getTournamentData(tournamentId, forceRefresh: boolean = false): Observable<any> {
+    if (!forceRefresh && this.tournamentData[tournamentId]) {
+      this.currentTournament = this.tournamentData[tournamentId];
+      return Observable.of(this.currentTournament);
+    }
     return this.http.get(`${this.url}/tournaments-data/${tournamentId}.json`)
       .map((response: Response) => {
-        this.currentTournament = response.json();
-        return this. currentTournament;
+        this.tournamentData[tournamentId] = response.json();
+        this.currentTournament = this.tournamentData[tournamentId];
+        return this.currentTournament;
       })
   }
 
   getCurrentTournament() {
     return this.currentTournament;
+  }
+
+  refreshCurrentTournament() {
+    return this.getTournamentData(this.currentTournament.tournament.id, true);
   }
 }

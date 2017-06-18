@@ -60,7 +60,8 @@ export class TeamDetailPage {
     this.allGames = this.games;
     this.teamStanding = _.find(this.tournamentData.standings, { 'teamId': this.team.id });
 
-    this.userSettingsService.isFavoriteTeam(this.team.id).then(value => this.isFollowing = value);
+    this.userSettingsService.isFavoriteTeam(this.team.id)
+      .then(value => this.isFollowing = value);
   }
 
   private getScoreDisplay(isTeam1, team1Score, team2Score) {
@@ -70,6 +71,7 @@ export class TeamDetailPage {
       let winIndicator = teamScore > opponentScore ? 'W: ' : 'L: ';
       return winIndicator + teamScore + '-' + opponentScore;
     }
+    return "N/A";
   }
 
   gameClicked(event, game) {
@@ -103,7 +105,7 @@ export class TeamDetailPage {
             text: 'Yes',
             handler: () => {
               this.isFollowing = false;
-              this.userSettings.unfavoriteTeam(this.team);
+              this.userSettingsService.unfavoriteTeam(this.team);
 
               let toast = this.toastController.create({
                 message: 'You have unfollowed this team.',
@@ -121,6 +123,16 @@ export class TeamDetailPage {
       this.isFollowing = true;
       this.userSettingsService.favoriteTeam(this.team, this.tournamentData.tournament.id, this.tournamentData.tournament.name);
     }
+  }
+
+  refreshAll(refresher) {
+    this.httpService.refreshCurrentTournament()
+      .subscribe(
+        () => {
+          refresher.complete();
+          this.ionViewDidLoad();
+        }
+      )
   }
 
 }

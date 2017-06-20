@@ -17,6 +17,8 @@ import {StandingsPage} from "../pages/standings/standings";
 import {HttpModule} from "@angular/http";
 import {UserSettingsService} from "./services/user-settings.service";
 import {IonicStorageModule} from "@ionic/storage";
+import {MapPage} from "../pages/map/map";
+import {AgmCoreModule} from "@agm/core";
 
 @NgModule({
   declarations: [
@@ -27,11 +29,13 @@ import {IonicStorageModule} from "@ionic/storage";
     TeamsPage,
     TournamentsPage,
     TeamHomePage,
-    StandingsPage
+    StandingsPage,
+    MapPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    AgmCoreModule.forRoot({ apiKey: 'AIzaSyBLCBIHAlqiaktwzc6OsHwpBPbOAGEGyEI'}),
     HttpModule,
     IonicStorageModule.forRoot()
   ],
@@ -44,13 +48,14 @@ import {IonicStorageModule} from "@ionic/storage";
     TeamsPage,
     TournamentsPage,
     TeamHomePage,
-    StandingsPage
+    StandingsPage,
+    MapPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    UserSettingsService
+    UserSettingsService,
   ]
 })
 export class AppModule {}

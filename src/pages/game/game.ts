@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {HttpService} from "../../app/services/http.service";
 import {TeamHomePage} from "../team-home/team-home";
+import {MapPage} from "../map/map";
 
 /**
  * Generated class for the GamePage page.
@@ -35,7 +36,7 @@ export class GamePage {
   }
 
   goToMap() {
-
+    this.navCtrl.push(MapPage, this.game);
   }
 
   isWinner(score1, score2) {

@@ -75,7 +75,7 @@ export class TeamsPage {
           return {
             divisionName: division.divisionName,
             divisionTeams: division.divisionTeams.filter(
-              team => team.name.toLowerCase().includes(searchVal)
+              team => team.name.toLowerCase().startsWith(searchVal)
             )
           };
         })

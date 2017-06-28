@@ -3,13 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {HttpService} from "../../app/services/http.service";
 import {TeamHomePage} from "../team-home/team-home";
 import {MapPage} from "../map/map";
-
-/**
- * Generated class for the GamePage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
+declare var window: any;
 @IonicPage()
 @Component({
   selector: 'page-game',
@@ -31,8 +25,10 @@ export class GamePage {
     this.navCtrl.push(TeamHomePage, team);
   }
 
-  goToDirection() {
-
+  goToDirections() {
+    let tournamentData = this.httpService.getCurrentTournament();
+    let location = tournamentData.locations[this.game.locationId];
+    window.location = `geo:?q=${location.latitude},${location.longitude};u=35`;
   }
 
   goToMap() {

@@ -19,6 +19,7 @@ import {UserSettingsService} from "./services/user-settings.service";
 import {IonicStorageModule} from "@ionic/storage";
 import {MapPage} from "../pages/map/map";
 import {AgmCoreModule} from "@agm/core";
+import { SQLite } from '@ionic-native/sqlite';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import {AgmCoreModule} from "@agm/core";
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     UserSettingsService,
+    SQLite
   ]
 })
 export class AppModule {}

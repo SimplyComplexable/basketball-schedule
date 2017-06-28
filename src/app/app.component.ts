@@ -72,6 +72,8 @@ export class MyApp {
 
   refreshFavorites() {
     this.userSettingsService.getAllFavorites()
-      .then(() => this.favoriteTeams = this.userSettingsService.items);
+      .then(
+        items => this.favoriteTeams = items
+      );
   }
 }

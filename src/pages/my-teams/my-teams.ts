@@ -23,9 +23,9 @@ export class MyTeamsPage {
 
   ionViewDidEnter() {
     this.userSettingsService.getAllFavorites()
-      .then(() => {
-        this.favorites = this.userSettingsService.items;
-      });
+      .then(
+        items => this.favorites = items
+      );
   }
 
   navigateToTournaments() {
